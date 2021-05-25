@@ -1,0 +1,175 @@
+body {
+  background-color: #131325;
+}
+
+.flex-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.flex-column {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+}
+
+.center {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.list {
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.list .card {
+  cursor: pointer;
+  min-width: 700px;
+  margin-bottom: 10px;
+  -webkit-perspective: 600px;
+          perspective: 600px;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  background-color: #212140;
+  -webkit-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  height: 90px;
+}
+
+.list .card .bottom {
+  height: 0px;
+  overflow: hidden;
+  width: 200px;
+  font-size: 12px;
+  color: #777;
+  font-weight: normal;
+}
+
+.list .card.open {
+  padding: 30px;
+  height: auto;
+}
+
+.list .card.open .bottom {
+  margin-top: 10px;
+  height: 100%;
+  overflow: visible;
+}
+
+.list .card.open .book {
+  -webkit-transform: rotateY(50deg);
+          transform: rotateY(50deg);
+  -webkit-box-shadow: -10px 10px 10px 2px rgba(0, 0, 0, 0.2), -2px 0px 0px 0px #888;
+          box-shadow: -10px 10px 10px 2px rgba(0, 0, 0, 0.2), -2px 0px 0px 0px #888;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transition-delay: 0.05s;
+          transition-delay: 0.05s;
+}
+
+.list .card.open .info {
+  -webkit-transform: translate(0, -10px);
+          transform: translate(0, -10px);
+}
+
+.list .card.open .members {
+  padding: 15px 20px;
+  border-radius: 4px;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+}
+
+.list .card button.simple {
+  cursor: pointer;
+  color: #CCC;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  background-color: #1ea94b;
+  padding: 15px 20px;
+  font-family: 'Montserrat';
+  font-weight: bold;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+
+.list .card button.simple:hover {
+  -webkit-box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.3);
+          box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.3);
+  -webkit-transform: translate(0, -2px);
+          transform: translate(0, -2px);
+}
+
+.list .card .book {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  width: 120px;
+  -webkit-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.list .card .info {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  min-width: 200px;
+  padding: 0px 30px;
+  font-family: 'Montserrat';
+  font-weight: bold;
+}
+
+.list .card .info .title {
+  font-size: 1em;
+  color: #FFF;
+  letter-spacing: 1px;
+}
+
+.list .card .info .author {
+  font-size: 12px;
+  font-weight: normal;
+  color: #888;
+}
+
+.list .card .group {
+  margin-left: auto;
+}
+
+.list .card .members {
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  padding: 40px;
+  font-family: 'Montserrat';
+  color: #CCC;
+  background-color: #1c1c36;
+}
+
+.list .card .members .current {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.list .card .members .max {
+  opacity: 0.5;
+  margin-left: 10px;
+}
+/*# sourceMappingURL=tony.css.map */
