@@ -1,5 +1,6 @@
 let div = document.getElementById("test1");
 let div1 = document.getElementById("t1");
+console.log(div , div1)
 fetch('http://127.0.0.1:7000/catog')
 .then(response => response.json())
 .then((post) => {

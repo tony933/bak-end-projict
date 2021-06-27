@@ -4,6 +4,7 @@ var express = require('express'),
  bcrypt = require('bcryptjs'),
  jwt = require('jsonwebtoken'),
  jwt_decode = require('jwt-decode'),
+ schedule = require('node-schedule'),
  tookendekod = "",
   categoryid ="",
   cors = require('cors'),
@@ -16,6 +17,15 @@ authorid="",
     optionsSuccessStatus: 200 // For legacy browser support
 }
 router.use(cors(corsOptions));
+
+var rule = new schedule.RecurrenceRule();
+
+rule.minute = new schedule.Range(0, 59, 1);
+
+schedule.scheduleJob(rule, async function(){
+    const result = await promiseQuery('delete from resrvation where date < now() - interval 2 DAY;');
+
+});
 
  //=========
 //Registr Route 
@@ -71,19 +81,19 @@ router.post('/login', cors(), async function(req, res) {
   //=========
 //jwt_decode function
 //=========
-  function jwtdecod (){
-    if (!tookendekod) return res.status(400).json({  Error: 'no jwt' });;
-    var decoded = jwt_decode(tookendekod);
-return decoded.id;
-  }
+//   function jwtdecod (){
+//     if (!tookendekod) return res.status(400).json({  Error: 'no jwt' });;
+//     var decoded = jwt_decode(tookendekod);
+// return decoded.id;
+//   }
  
   //=========
 //category Route
 //=========
   router.post('/category', cors(), async(req, res) => {
-    const {categoryName ,name_book , year_book , numper_book , dec_book ,  book_image,authorName} = req.body;
+    const {categoryName ,name_book , year_book ,user_id , numper_book , dec_book ,  book_image,authorName} = req.body;
     console.log(year_book)
-var id_decode = jwtdecod();
+// var id_decode = jwtdecod();
  //check category Existence
  const result = await promiseQuery( 'SELECT * FROM category WHERE category_name = ?' , [categoryName] );
 
@@ -94,7 +104,7 @@ if (result.length>0) {
 var sql = "INSERT INTO category (category_name,user_id ) VALUES ?";
 //Make an array of values:
 var values = [
-    [ categoryName , id_decode ],
+    [ categoryName , user_id ],
 ];
 //Execute the SQL statement, with the value array:
 const register = await promiseQuery( sql, [values] );
@@ -106,7 +116,7 @@ categoryid = register.insertId;
  var sqlbook = "INSERT INTO book (book_name,user_id,book_year,book_nopages,book_description,book_image ) VALUES ?";
  //Make an array of values:
  var values = [
-     [ name_book ,id_decode, year_book , numper_book , dec_book  , book_image ],
+     [ name_book ,user_id, year_book , numper_book , dec_book  , book_image ],
  ];
  //Execute the SQL statement, with the value array:
  const registerbook = await promiseQuery( sqlbook, [values] );
@@ -124,7 +134,7 @@ if (resultauthor.length>0) {
 var sqlauthor = "INSERT INTO author (author_name,user_id ) VALUES ?";
 //Make an array of values:
 var values = [
-    [ authorName , id_decode ],
+    [ authorName , user_id ],
 ];
 //Execute the SQL statement, with the value array:
 const registerauthor = await promiseQuery( sqlauthor, [values] );
@@ -148,26 +158,60 @@ var values = [
 const registecatogrybook = await promiseQuery( sqlcatogorybook, [values] );
 if (registecatogrybook) return res.status(200).json({ ok: "successful" });
 })
-// router.post('/resva',async (req,res)=>{
-//     var id_decode = jwtdecod1();
-//     var bookid = req.body.bookid
-//     var sql = "INSERT INTO resrvation (book_id,user_id ) VALUES ?";
-//     //Make an array of values:
-//     var values = [
-//         [ bookid , id_decode ],
-//     ];
-//     //Execute the SQL statement, with the value array:
-//     const register = await promiseQuery( sql, [values] );
-//     if (register) return res.status(200).json({ ok: "successful" });
-// })
-router.get('/get', async (req, res) => {
+router.post('/resva',async (req,res)=>{
+    // var id_decode = jwtdecod();
+    var bookid = req.body.bookid;
+    var user_id = req.body.user_id
+    var today = new Date();
+        const result1 = await promiseQuery('  SET FOREIGN_KEY_CHECKS = 0;');
+
+    const result = await promiseQuery('SELECT book_id FROM resrvation WHERE book_id = ?', [bookid]);
+    if (result.length > 0) return res.status(400).json({ validateError: "book is already resrvation" });
+    var sql = "INSERT INTO resrvation (book_id,user_id,date ) VALUES ?";
+    //Make an array of values:
+    var values = [
+        [ bookid , user_id, today ],
+    ];
+    //Execute the SQL statement, with the value array:
+    const register = await promiseQuery( sql, [values] );
+    if (register) return res.status(200).json({ ok: "successful" });
+})
+
+router.post('/delevery',async (req,res)=>{
+    var user_id = req.body.user_id
+    var bookid = req.body.bookid;
+    var today = new Date();
+    var street = req.body.street;
+        const result1 = await promiseQuery('  SET FOREIGN_KEY_CHECKS = 0;');
+
+    const result = await promiseQuery('SELECT book_id FROM delevery WHERE book_id = ?', [bookid]);
+    if (result.length > 0) return res.status(400).json({ validateError: "book is already resrvation" });
+    var sql = "INSERT INTO delevery (book_id,user_id,user_stahen,register_date	 ) VALUES ?";
+    //Make an array of values:
+    var values = [
+        [ bookid , user_id, street,today ],
+    ];
+    //Execute the SQL statement, with the value array:
+    const register = await promiseQuery( sql, [values] );
+    if (register) return res.status(200).json({ ok: "successful" });
+})
+router.get('/getdelvery', async (req, res) => {
+
+    const result1 = await promiseQuery('select book.book_name, user.user_name, delevery.user_stahen  from delevery  inner  join book on (book.book_id = delevery.book_id) inner join user on (user.user_id = delevery.user_id)  ');
+
+    res.json({resrvation:result1  });
+});
+router.get('/getbook', async (req, res) => {
     const result = await promiseQuery('select author.author_name,book.book_id ,book.book_name ,book.book_year,book.book_nopages ,book.book_description,book.book_image from author_book inner join author on (author.author_id =author_book.author_id ) inner join book on (book.book_id = author_book.book_id)');
-    const cat = await promiseQuery(' select book.book_id,category.category_id ,book.book_name ,book.book_year,book.book_nopages ,book.book_description,book.book_image,category.category_name from book  join catogory_book on (book.book_id = catogory_book.book_id)  join category on (category.category_id =catogory_book.category_id  );');
 
     const result1 = await promiseQuery('select book.book_name, user.user_name from resrvation  inner  join book on (book.book_id = resrvation.book_id) inner join user on (user.user_id = resrvation.user_id)');
 
-    res.json({booik:result,resrvation:result1 , category:cat });
+    res.json({booik:result,resrvation:result1  });
 });
+// router.get('/get1', async (req, res) => {
+//     const result = await promiseQuery('delete from resrvation where date < now() - interval 2 DAY;');
+//     res.json({booik:result });
+// });
 // router.get('/get1', async (req, res) => {
 //     const result = await promiseQuery('select book.book_name, user.user_name from resrvation  inner  join book on (book.book_id = resrvation.book_id) inner join user on (user.user_id = resrvation.user_id)');
 //     res.json(result);
@@ -195,10 +239,15 @@ router.get('/catogall/:id', async (req, res) => {
     const result = await promiseQuery('select book.book_id,category.category_id ,book.book_name ,book.book_year,book.book_nopages ,book.book_description,book.book_image,category.category_name from book  join catogory_book on (book.book_id = catogory_book.book_id)  join category on (category.category_id =catogory_book.category_id  ) WHERE category.category_id = ?', [categoryid]);
     res.json(result);
 });
-// router.get('/catogdrop', async (req, res) => {
-//     const result = await promiseQuery('select book.book_id,category.category_id ,book.book_name ,book.book_year,book.book_nopages ,book.book_description,book.book_image,category.category_name from book  join catogory_book on (book.book_id = catogory_book.book_id)  join category on (category.category_id =catogory_book.category_id  ) WHERE category.category_id = ?', [categor]);
-//     res.json(result);
-// });
+router.get('/bookdetale/:id', async (req, res) => {
+    bookid =  req.params.id;
+    console.log(bookid)
+  
+  
+      const result = await promiseQuery(`select author.author_name,book.book_id ,book.book_name ,book.book_year,book.book_nopages ,book.book_description,book.book_image from author_book inner join author on (author.author_id =author_book.author_id ) inner join book on (book.book_id = author_book.book_id) WHERE book.book_id = ?`, [bookid]);
+      res.json(result);
+  });
+
 router.get('/s2', (req, res) => {
 
     res.sendFile(path.resolve('./test1.html'));
