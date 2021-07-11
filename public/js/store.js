@@ -80,7 +80,7 @@ console.log(name2)
         console.log(post.booik[i].book_name)
         console.log(bookReservationarry[i])
         if (bookReservationarry.includes(post.booik[i].book_name)) {
-          take = "the book is takine"
+          take = "the book is taken"
         }
         var null1 = "";
         var null2 = "";
@@ -119,9 +119,17 @@ console.log(name2)
       ${post.booik[i].book_name}
       
       </h1>
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.booik[i].author_name}
+      
+      </h1>
       <p class="hidden lg:flex lg:px-5 py-3 lg:text-2xl">
       ${post.booik[i].book_description}
       </p>
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.booik[i].isbn}
+      
+      </h1>
       <div id="hide" style="display: ${null1} ;">
       <button
         class="bg-green-600 lg:text-3xl px-9 py-2 lg:px-7 lg:py-5 lg:pb-5 ml-5 hover:bg-green-500 duration-200 text-white">
@@ -140,7 +148,7 @@ console.log(name2)
      <a href = "http://127.0.0.1:7000/book" >  delet delevery <a>
       </button>
       </div>
-      <p> ${take} </p>
+      <p class="text-xl lg:text-3xl px-5 py-3 font-bold"> ${take} </p>
       </div>
   </div>
 </div>

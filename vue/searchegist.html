@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/tailwindcss.css" />
+
+</head>
+
+<body>
+  <!-- Nav-bar -->
+  <nav class="bg-green-600 block w-screen flex items-center justify-between flex-grow space-x-10 px-4 py-5 lg:p-5">
+    <!-- Dorp -->
+    <div class="relative">
+        <div>
+            <a href="http://127.0.0.1:7000/login"> <button id="menu-dwn"
+                    class="flex items-center space-x-2 lg:space-x-5 text-xl lg:text-3xl text-gray-100 lg:p-5 block hover:bg-green-700 duration-300">
+                    Login
+                </button> </a>
+        </div>
+    </div>
+    
+    <div class=" bg-gray-200">
+        <div class="container  flex justify-center items-center">
+            <div class="relative">
+                <div class="absolute top-4 left-3"> <i
+                        class="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i> </div>
+                <input type="text" class="h-14 w-96 pl-10 pr-20 rounded-lg z-0 focus:shadow focus:outline-none"
+                    placeholder="Search anything..." id="search">
+                <div class="absolute top-2 right-2"> <button
+                        class="h-10 w-20 text-white rounded-lg bg-green-600 hover:bg-green-200"
+                        onclick="ser()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+  <div class="my-5">
+    <button
+      class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+      id="Book " onclick="inFunction(this)">Book</button>
+    <button
+      class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+      id="auther" onclick="inFunction(this)">auther</button>
+    <button
+      class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+      id="year" onclick="inFunction(this)">year</button>
+    <button
+      class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+      id="isbn" onclick="inFunction(this)">isbn</button>
+  </div>
+  <div class=" space-y-2  p-2 lg:p-10 " id="book">
+    <!-- Card -->
+
+
+
+
+
+
+
+    <!-- Body-end -->
+  </div>
+
+
+
+  <script>
+    function inFunction(ele) {
+      const queryString = window.location.search;
+      console.log(queryString);
+      const urlParams = new URLSearchParams(queryString);
+      const currentTarget = urlParams.get('myVar1');
+      var btnValue = ele.innerText;
+      console.log(btnValue);
+
+
+      book = document.getElementById("book")
+      var bookReservationarry = []
+      fetch('http://127.0.0.1:7000/getbook')
+        .then(response => response.json())
+        .then((post) => {
+          console.log(post.resrvation)
+          for (let i = 0; i < post.resrvation.length; i++) {
+            console.log(post.resrvation[i].book_name)
+            bookReservationarry.push(post.resrvation[i].book_name)
+          }
+          console.log(bookReservationarry)
+        })
+
+
+      switch (btnValue) {
+        case "Book":
+          book = document.getElementById("book")
+          book.innerHTML = ""
+
+          // var bookReservationarry =[]
+          console.log(currentTarget)
+          fetch(`http://127.0.0.1:7000/search/${currentTarget}`)
+            .then(response => response.json())
+            .then((post) => {
+              console.log(post)
+
+              for (let i = 0; i < post.Book.length; i++) {
+                console.log(post.Book[i])
+                var take = ""
+                if (bookReservationarry.includes(post.Book[i].book_name)) {
+                  take = "the book is takine"
+                }
+               
+                book.innerHTML += `
+  <div>
+  <div class="bg-gray-300 flex">
+    <img src='${post.Book[i].book_image}' class="w-40 h-40 lg:w-2/12 h-auto" alt="book-cover" />
+    <div class="flex justify-center items-start flex-col">
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.Book[i].book_name}
+      
+      </h1>
+      <p class="hidden lg:flex lg:px-5 py-3 lg:text-2xl">
+      ${post.Book[i].book_description}
+      </p>
+     
+      <p> ${take} </p>
+      </div>
+  </div>
+</div>
+      `
+              }
+            });
+          break;
+        case "auther":
+          book = document.getElementById("book")
+          book.innerHTML = ""
+          // var bookReservationarry =[]
+          console.log(currentTarget)
+          fetch(`http://127.0.0.1:7000/search/${currentTarget}`)
+            .then(response => response.json())
+            .then((post) => {
+              console.log(post)
+        
+              for (let i = 0; i < post.Author.length; i++) {
+                console.log(post.Author[i])
+                var take = ""
+                if (bookReservationarry.includes(post.Author[i].book_name)) {
+                  take = "the book is takine"
+                }
+               
+
+              
+                book.innerHTML += `
+  <div>
+  <div class="bg-gray-300 flex">
+    <img src='${post.Author[i].book_image}' class="w-40 h-40 lg:w-2/12 h-auto" alt="book-cover" />
+    <div class="flex justify-center items-start flex-col">
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.Author[i].book_name}
+      
+      </h1>
+      <p class="hidden lg:flex lg:px-5 py-3 lg:text-2xl">
+      ${post.Author[i].book_description}
+      </p>
+     
+      <p> ${take} </p>
+      </div>
+  </div>
+</div>
+      `
+              }
+            });
+          break;
+        case "year":
+          book = document.getElementById("book")
+          book.innerHTML = ""
+          // var bookReservationarry =[]
+          console.log(currentTarget)
+          fetch(`http://127.0.0.1:7000/search/${currentTarget}`)
+            .then(response => response.json())
+            .then((post) => {
+              console.log(post)
+             
+              for (let i = 0; i < post.Year.length; i++) {
+                console.log(post.Year[i])
+                var take = ""
+                if (bookReservationarry.includes(post.Year[i].book_name)) {
+                  take = "the book is takine"
+                }
+
+
+           
+                book.innerHTML += `
+  <div>
+  <div class="bg-gray-300 flex">
+    <img src='${post.Year[i].book_image}' class="w-40 h-40 lg:w-2/12 h-auto" alt="book-cover" />
+    <div class="flex justify-center items-start flex-col">
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.Year[i].book_name}
+      
+      </h1>
+      <p class="hidden lg:flex lg:px-5 py-3 lg:text-2xl">
+      ${post.Year[i].book_description}
+      </p>
+     
+      <p> ${take} </p>
+      </div>
+  </div>
+</div>
+      `
+              }
+            });
+          break;
+        case "isbn":
+          book = document.getElementById("book")
+          book.innerHTML = ""
+          // var bookReservationarry =[]
+          console.log(currentTarget)
+          fetch(`http://127.0.0.1:7000/search/${currentTarget}`)
+            .then(response => response.json())
+            .then((post) => {
+              console.log(post)
+            
+              for (let i = 0; i < post.isbn.length; i++) {
+                console.log(post.isbn[i])
+                var take = ""
+
+                if (bookReservationarry.includes(post.isbn[i].book_name)) {
+                  take = "the book is takine"
+                }
+               
+                book.innerHTML += `
+  <div>
+  <div class="bg-gray-300 flex">
+    <img src='${post.isbn[i].book_image}' class="w-40 h-40 lg:w-2/12 h-auto" alt="book-cover" />
+    <div class="flex justify-center items-start flex-col">
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.isbn[i].book_name}
+      
+      </h1>
+      <p class="hidden lg:flex lg:px-5 py-3 lg:text-2xl">
+      ${post.isbn[i].book_description}
+      </p>
+      
+      <p> ${take} </p>
+      </div>
+  </div>
+</div>
+      `
+              }
+            });
+          break;
+        default:
+          break;
+      }
+    }
+  
+
+    function ser() {
+      var values1 = document.getElementById("search").value
+      console.log(values1)
+      window.location.replace(`http://127.0.0.1:7000/searche?myVar1=${values1}`);
+
+    }
+
+  </script>
+
+</body>
+
+</html>

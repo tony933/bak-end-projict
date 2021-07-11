@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/tailwindcss.css" />
+    <title>Book</title>
+</head>
+
+<body class="bg-gray-200 font-sans overflow-auto">
+    <!-- Nav-bar -->
+    <!-- Nav-bar -->
+    <nav class="bg-green-600 block w-screen flex items-center justify-between flex-grow space-x-10 px-4 py-5 lg:p-5">
+        <!-- Dorp -->
+        <div class="relative">
+            <div>
+                <a href="http://127.0.0.1:7000/login"> <button id="menu-dwn"
+                        class="flex items-center space-x-2 lg:space-x-5 text-xl lg:text-3xl text-gray-100 lg:p-5 block hover:bg-green-700 duration-300">
+                        Login
+                    </button> </a>
+            </div>
+        </div>
+        
+        <div class=" bg-gray-200">
+            <div class="container  flex justify-center items-center">
+                <div class="relative">
+                    <div class="absolute top-4 left-3"> <i
+                            class="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i> </div>
+                    <input type="text" class="h-14 w-96 pl-10 pr-20 rounded-lg z-0 focus:shadow focus:outline-none"
+                        placeholder="Search anything..." id="search">
+                    <div class="absolute top-2 right-2"> <button
+                            class="h-10 w-20 text-white rounded-lg bg-green-600 hover:bg-green-200"
+                            onclick="ser()">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <h1 id="title" class="text-center text-2xl "></h1>
+    <!-- body -->
+    <div class=" space-y-2  p-2 lg:p-10 " id="book">
+        <!-- Card -->
+
+
+
+
+
+
+
+        <!-- Body-end -->
+    </div>
+
+
+
+
+
+    <script>
+      
+      book = document.getElementById("book")
+        var bookReservationarry = []
+       
+
+        fetch('http://127.0.0.1:7000/getbook')
+    .then(response => response.json())
+    .then((post) => {
+      console.log(post.resrvation)
+      for (let i = 0; i < post.resrvation.length; i++) {
+        console.log(post.resrvation[i].book_name)
+        bookReservationarry.push(post.resrvation[i].book_name)
+      }
+      console.log(bookReservationarry)
+      for (let i = 0; i < post.booik.length; i++) {
+        console.log(post.booik[i])
+        var take = ""
+        console.log(post.booik[i].book_name)
+        console.log(bookReservationarry[i])
+        if (bookReservationarry.includes(post.booik[i].book_name)) {
+          take = "the book is takine"
+        }
+              book.innerHTML += `
+  <div>
+  <div class="bg-gray-300 flex">
+    <img src='${post.booik[i].book_image}' class="w-40 h-40 lg:w-2/12 h-auto" alt="book-cover" />
+    <div class="flex justify-center items-start flex-col">
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.booik[i].book_name}
+      
+      </h1>
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.booik[i].author_name}
+      
+      </h1>
+      <p class="hidden lg:flex lg:px-5 py-3 lg:text-2xl">
+      ${post.booik[i].book_description}
+      </p>
+      <h1 class="text-xl lg:text-3xl px-5 py-3 font-bold">
+      ${post.booik[i].isbn}
+      
+      </h1>
+      <p> ${take} </p>
+      </div>
+  </div>
+</div>
+      `
+        // if (take != null) {
+        // console.log( document.getElementById("hide").style.display = "none")
+        // console.log(document.getElementById("hide"))
+        // }
+        //       document.getElementById("hide").style.display = "none";
+        // console.log(document.getElementById("hide"))
+      }
+
+
+    });
+
+
+
+
+        function ser() {
+            var values1 = document.getElementById("search").value
+            console.log(values1)
+            window.location.replace(`http://127.0.0.1:7000/searchegist?myVar1=${values1}`);
+
+        }
+
+    </script>
+</body>
+
+</html>

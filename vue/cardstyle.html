@@ -97,6 +97,10 @@
     
     <h1 class="text-3xl px-5 py-3 font-bold">${jsonObject[0].book_name}</h1>
     <p class="px-5 py-3 text-2xl" >
+     auther: ${jsonObject[0].author_name}
+    </p>
+   
+    <p class="px-5 py-3 text-2xl" >
       ${jsonObject[0].book_description}
     </p>
     <p class="px-5 py-3 text-2xl" >
@@ -104,6 +108,9 @@
     </p>
     <p class="px-5 py-3 text-2xl" >
      year: ${jsonObject[0].book_year}
+    </p>
+    <p class="px-5 py-3 text-2xl" >
+     isbn: ${jsonObject[0].isbn}
     </p>
     <div class="flex">
     <button class="bg-green-600 text-3xl px-7 py-5 ml-5 hover:bg-green-500 duration-200 text-white "id = "${jsonObject[0].book_id}" onclick="check(event)" >Reservation</button>

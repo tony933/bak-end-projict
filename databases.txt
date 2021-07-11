@@ -1,0 +1,49 @@
+Microsoft Windows [Version 10.0.19042.1083]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Tony>mysql.exe -u root --password
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 1254
+Server version: 10.4.18-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE libry2;
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [(none)]> use libry2;
+Database changed
+MariaDB [libry2]> create table user(user_id INT NOT NULL AUTO_INCREMENT ,PRIMARY KEY(user_id) , user_name TEXT, user_email TEXT , user_password TEXT , user_register_date DATETIME,admin BOOLEAN);
+Query OK, 0 rows affected (0.027 sec)
+
+MariaDB [libry2]> create table category(category_id INT NOT NULL AUTO_INCREMENT ,PRIMARY KEY(category_id) , category_name TEXT, user_id INT ,FOREIGN KEY(user_id) REFERENCES user(user_id) );
+Query OK, 0 rows affected (0.031 sec)
+
+MariaDB [libry2]> create table book(book_id INT NOT NULL AUTO_INCREMENT ,PRIMARY KEY(book_id) , book_name TEXT, user_id INT ,FOREIGN KEY(user_id) REFERENCES user(user_id),book_year INT , book_nopages INT , book_description TEXT  , book_image TEXT );
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [libry2]> create table author(author_id INT NOT NULL AUTO_INCREMENT ,PRIMARY KEY(author_id) , author_name TEXT, user_id INT ,FOREIGN KEY(user_id) REFERENCES user(user_id) );
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [libry2]> CREATE TABLE author_book(author_id INT, FOREIGN KEY(author_id) REFERENCES author(author_id), book_id INT, FOREIGN KEY(book_id) REFERENCES book(book_id) );
+Query OK, 0 rows affected (0.026 sec)
+
+MariaDB [libry2]> CREATE TABLE resrvation( book_id INT, FOREIGN KEY(book_id) REFERENCES book(book_id),user_id INT ,FOREIGN KEY(user_id) REFERENCES user(user_id),date DATETIME);
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [libry2]>  CREATE TABLE catogory_book(category_id INT , FOREIGN KEY(category_id) REFERENCES category(category_id), book_id INT, FOREIGN KEY(book_id) REFERENCES book(book_id));
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [libry2]> CREATE TABLE delevery( book_id INT, FOREIGN KEY(book_id) REFERENCES book(book_id),user_id INT ,FOREIGN KEY(user_id) REFERENCES user(user_id), user_stahen TEXT , register_date DATETIME);
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [libry2]> ALTER TABLE book  ADD isbn TEXT AFTER book_nopages;
+Query OK, 0 rows affected (0.012 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [libry2]> ALTER TABLE user  ADD veludition BOOLEAN AFTER user_password;
+Query OK, 0 rows affected (0.012 sec)
+Records: 0  Duplicates: 0  Warnings: 0

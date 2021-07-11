@@ -465,6 +465,20 @@ router.get('/validition', checkToken, (req, res) => {
 
 })
 
+router.get('/gist',  (req, res) => {
+
+    res.sendFile(path.resolve('./vue/gist.html'));
+
+
+})
+router.get('/searchegist',  (req, res) => {
+
+    res.sendFile(path.resolve('./vue/searchegist.html'));
+
+
+})
+
+
 router.post('/verify', async (req, res) => {
     var user_id = req.body.user_id
     var validithin = req.body.validithin
