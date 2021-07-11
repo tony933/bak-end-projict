@@ -3,6 +3,7 @@ const express = require('express'),
     app = express(),
     port = 7000,
     // schedule = require('node-schedule'),
+     cookieParser = require('cookie-parser'),
 
     bodyParser = require('body-parser');
 //===========
@@ -11,6 +12,8 @@ const express = require('express'),
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.static(__dirname + '/public'));
+app.use(cookieParser())
+
 
 // var rule = new schedule.RecurrenceRule();
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<!--Linking to CSS-->
+	<link type="text/css" rel="stylesheet" href="css/Main-Style.css" />
+	<title>Register</title>
+</head>
+
+<body>
+
+
+
+	<div class="backgroundfix3">
+		<div class="container">
+			<div class="main">
+				<h1>Registration</h1>
+				<p class="btn-primary">Sign up to this library website to reserve books, an account is always good to
+					have.</p>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="Form">
+		<h1>Fill in the form below</h1>
+		<div name="Registration" action="" method="post">
+			<input type="text" name="EMAIL" placeholder="EMAIL" id="firs" required />
+			<input type="password" name="Password" placeholder="Password" id="password" required />
+			<input type="text" name="FirstName" id="name" placeholder="First Name" required />
+			<input type="submit" onclick="rigisterForm()" name="Submit" value="Register" />
+		</div>
+		<h1 id="err"></h1>
+
+	</div>
+
+	<script>
+
+		const rigisterForm = async () => {
+			let firstname = document.getElementById('firs').value,
+			 name = document.getElementById('name').value,
+				password = document.getElementById('password').value;
+			console.log(firstname);
+			console.log(password);
+			var myHeaders = new Headers();
+			myHeaders.append("Content-Type", "application/json");
+
+			var raw = JSON.stringify({
+				userName: name,
+				email: firstname,
+				password: password,
+			});
+
+			var requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			};
+
+			fetch("http://127.0.0.1:7000/ragister", requestOptions)
+				.then(async response => {
+					var getData = await response.json();
+					console.log(getData)
+					console.log(getData.validateError.passwordError)
+					console.log(getData.passwordError)
+					if (getData.validateError.passwordError != undefined) {
+						document.getElementById("err").innerHTML = getData.validateError.passwordError
+
+
+					} else if (getData.validateError.emailError != undefined) {
+						document.getElementById("err").innerHTML = getData.validateError.emailError
+
+					}
+				if(getData.validateError.regist == "successful"){
+					window.location.replace("http://127.0.0.1:7000/login");
+				}
+					
+
+				})
+
+
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/tailwindcss.css" />
+  <!-- <script src="js/store.js" async></script> -->
+
+
+</head>
+
+<body>
+
+  <!-- Nav-bar -->
+  <nav class="bg-green-600 block w-screen flex items-center justify-between flex-grow space-x-10 px-4 py-5 lg:p-5">
+    <!-- Dorp -->
+    <div class="relative">
+      <div>
+        <a href="http://127.0.0.1:7000/catogery"> <button id="menu-dwn"
+            class="flex items-center space-x-2 lg:space-x-5 text-xl lg:text-3xl text-gray-100 lg:p-5 block hover:bg-green-700 duration-300">
+            Category
+          </button> </a>
+      </div>
+    </div>
+    <!-- home -->
+    <div
+      class="flex items-center space-x-2 lg:space-x-5 text-xl lg:text-3xl text-gray-100 lg:p-5 block hover:bg-green-700 duration-300">
+      <svg class="w-5 h-5 lg:w-10 lg:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+        </path>
+      </svg>
+      <a href="http://127.0.0.1:7000/book">Home</a>
+    </div>
+    <!-- login -->
+    <div
+      class="text-xl lg:text-3xl text-gray-100 lg:p-5 block hover:bg-green-700 duration-300 flex items-center lg:mx-2 space-x-2 lg:space-x-5">
+      <svg class="w-5 h-5 lg:w-10 lg:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+      </svg>
+      <button href="#" onclick="deletjwt()"> Logout</button>
+    </div>
+    <div class=" bg-gray-200">
+      <div class="container  flex justify-center items-center">
+        <div class="relative">
+          <div class="absolute top-4 left-3"> <i class="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i> </div>
+          <input type="text" class="h-14 w-96 pl-10 pr-20 rounded-lg z-0 focus:shadow focus:outline-none"
+            placeholder="Search anything..." id="search">
+          <div class="absolute top-2 right-2"> <button
+              class="h-10 w-20 text-white rounded-lg bg-green-600 hover:bg-green-200" onclick="ser()">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div>
+    <div class="bg-gray-300  flex" id="bookdetale">
+
+    </div>
+  </div>
+  <script>
+
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    const currentTarget = urlParams.get('myVar1');
+    let div2 = document.getElementById("bookdetale");
+
+    // window.location.replace("http://127.0.0.1:7000/bookdetale");
+
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch(`http://127.0.0.1:7000/bookdetale/${currentTarget}`, requestOptions)
+      .then(async response => {
+
+
+
+        let jsonObject = await response.json()
+        console.log(jsonObject)
+        div2.innerHTML = `
+
+    <img
+    src='${jsonObject[0].book_image}'
+    class="w-3/12"
+    alt="book-cover"
+  />
+  <div class="flex justify-center items-start flex-col">
+    
+    <h1 class="text-3xl px-5 py-3 font-bold">${jsonObject[0].book_name}</h1>
+    <p class="px-5 py-3 text-2xl" >
+      ${jsonObject[0].book_description}
+    </p>
+    <p class="px-5 py-3 text-2xl" >
+     namber of pages: ${jsonObject[0].book_nopages}
+    </p>
+    <p class="px-5 py-3 text-2xl" >
+     year: ${jsonObject[0].book_year}
+    </p>
+    <div class="flex">
+    <button class="bg-green-600 text-3xl px-7 py-5 ml-5 hover:bg-green-500 duration-200 text-white "id = "${jsonObject[0].book_id}" onclick="check(event)" >Reservation</button>
+    <button class="bg-green-600 text-3xl px-7 py-5 ml-5 hover:bg-green-500 duration-200 text-white " id = "${jsonObject[0].book_id}" onclick="checkdelvery(event)" >Delivery</button>
+   </div>
+  </div>
+`
+
+
+      })
+    var docCookies = {
+      getItem: function (sKey) {
+        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+      },
+      setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+        if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
+        var sExpires = "";
+        if (vEnd) {
+          switch (vEnd.constructor) {
+            case Number:
+              sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+              break;
+            case String:
+              sExpires = "; expires=" + vEnd;
+              break;
+            case Date:
+              sExpires = "; expires=" + vEnd.toUTCString();
+              break;
+          }
+        }
+        document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+        return true;
+      },
+      removeItem: function (sKey, sPath, sDomain) {
+        if (!sKey || !this.hasItem(sKey)) { return false; }
+        document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "");
+        return true;
+      },
+      hasItem: function (sKey) {
+        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+      },
+      keys: /* optional method: you can safely remove it! */ function () {
+        var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+        for (var nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]); }
+        return aKeys;
+      }
+    };
+    function parseJwt(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
+    };
+    var user_id = parseJwt(docCookies.getItem("tooken"))
+    console.log(user_id.id)
+    user = user_id.id
+
+    function check(e) {
+      const currentTarget = e.currentTarget.id
+      console.log(currentTarget)
+      const loginData = {
+        bookid: currentTarget,
+        user_id: user
+      }
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+
+      }
+      fetch('http://127.0.0.1:7000/resva', options)
+      console.log(options);
+
+    }
+    function checkdelvery(e) {
+      const currentTarget = e.currentTarget.id
+      console.log(currentTarget)
+      var person = prompt("Please enter your city", "Bagdad");
+
+      const loginData = {
+        bookid: currentTarget,
+        street:person,
+        user_id: user
+      }
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+
+      }
+      fetch('http://127.0.0.1:7000/delevery', options)
+      console.log(options);
+
+    }
+
+    function ser() {
+      var values1 = document.getElementById("search").value
+      console.log(values1)
+      window.location.replace(`http://127.0.0.1:7000/searche?myVar1=${values1}`);
+
+    }
+    function deletjwt() {
+      docCookies.removeItem("tooken")
+      window.location.replace("http://127.0.0.1:7000/");
+
+    }
+
+  </script>
+</body>
+
+</html>
